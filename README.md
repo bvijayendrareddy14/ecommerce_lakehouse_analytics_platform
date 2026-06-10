@@ -1,6 +1,6 @@
 # ecommerce_lakehouse_analytics_platform_prod
 
-# E-Commerce Lakehouse Analytics Platform
+
 
 ## Overview
 
