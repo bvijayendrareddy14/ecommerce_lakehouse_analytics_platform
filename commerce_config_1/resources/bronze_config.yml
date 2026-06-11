@@ -1,0 +1,23 @@
+# A sample job for commerce_config_1.
+
+resources:
+  jobs:
+    sample_job:
+      name: bronze_confing_job
+
+
+      parameters:
+        - name: catalog
+          default: ${var.catalog}
+        - name: schema
+          default: ${var.schema}
+
+      tasks:
+        - task_key: notebook_task
+          notebook_task:
+            notebook_path: ../src/confing bronze schemas and catalogs.ipynb
+
+      environments:
+        - environment_key: default
+          spec:
+            environment_version: "4"
