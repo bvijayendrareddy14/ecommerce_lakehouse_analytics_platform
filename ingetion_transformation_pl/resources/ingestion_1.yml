@@ -3,7 +3,7 @@
 resources:
   jobs:
     sample_job:
-      name: sample_job
+      name: ingestion_1
 
       trigger:
         # Run this job every day, exactly one day from the last run; see https://docs.databricks.com/api/workspace/jobs/create#trigger
@@ -20,11 +20,21 @@ resources:
           default: ${var.catalog}
         - name: schema
           default: ${var.schema}
+        - name: env
+          default: ${var.env}
 
       tasks:
-        - task_key: notebook_task
+        - task_key: customers_raw_ingest
           notebook_task:
-            notebook_path: ../src/sample_notebook.ipynb
+            notebook_path: ../src/customers_raw.ipynb
+
+        - task_key: customers_stage_ingest
+          depends_on:
+            - task_key: customers_raw_ingest
+          notebook_task:
+            notebook_path: ../src/customers_stage.ipynb
+
+             
 
       environments:
         - environment_key: default
