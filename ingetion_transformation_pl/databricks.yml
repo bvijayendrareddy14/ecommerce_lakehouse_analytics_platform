@@ -13,6 +13,8 @@ variables:
     description: The catalog to use
   schema:
     description: The schema to use
+  env:
+    description: The env to use
 
 targets:
   dev:
@@ -26,7 +28,8 @@ targets:
       host: https://adb-7405618330413294.14.azuredatabricks.net
     variables:
       catalog: commerce_raw_dev
-      schema: dev
+      schema: bronze
+      env: dev
   prod:
     mode: production
     workspace:
@@ -35,7 +38,8 @@ targets:
       root_path: /Workspace/Users/meghanath777@outlook.com/.bundle/${bundle.name}/${bundle.target}
     variables:
       catalog: commerce_raw_dev
-      schema: prod
+      schema: bronze
+      env: prod
     permissions:
       - user_name: meghanath777@outlook.com
         level: CAN_MANAGE
