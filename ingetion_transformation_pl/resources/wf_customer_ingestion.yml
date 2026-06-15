@@ -1,7 +1,7 @@
 resources:
   jobs:
     customers_ingestion_pipeline:
-
+    
       name: "wf_customer_ingestion"
 
       max_concurrent_runs: 1
