@@ -1,5 +1,3 @@
-# This is a Databricks asset bundle definition for ingetion_transformation_pl.
-# See https://docs.databricks.com/dev-tools/bundles/index.html for documentation.
 bundle:
   name: ingetion_transformation_pl
   uuid: b434f280-0301-4090-96bb-288d2acef131
@@ -7,39 +5,55 @@ bundle:
 include:
   - resources/*.yml
 
-# Variable declarations. These variables are assigned in the dev/prod targets below.
 variables:
-  catalog:
-    description: The catalog to use
-  schema:
-    description: The schema to use
+  raw_catalog:
+    description: Raw catalog
+
+  raw_schema:
+    description: Raw schema
+
+  stage_catalog:
+    description: Stage catalog
+
+  stage_schema:
+    description: Stage schema
+
   env:
-    description: The env to use
+    description: Environment
 
 targets:
   dev:
-    # The default target uses 'mode: development' to create a development copy.
-    # - Deployed resources get prefixed with '[dev my_user_name]'
-    # - Any job schedules and triggers are paused by default.
-    # See also https://docs.databricks.com/dev-tools/bundles/deployment-modes.html.
     mode: development
     default: true
+
     workspace:
       host: https://adb-7405618330413294.14.azuredatabricks.net
+
     variables:
-      catalog: commerce_raw_dev
-      schema: bronze
+      raw_catalog: commerce_raw_dev
+      raw_schema: bronze
+
+      stage_catalog: commerce_stage_dev
+      stage_schema: silver
+
       env: dev
+
   prod:
     mode: production
+
     workspace:
       host: https://adb-7405618330413294.14.azuredatabricks.net
-      # We explicitly deploy to /Workspace/Users/meghanath777@outlook.com to make sure we only have a single copy.
       root_path: /Workspace/Users/meghanath777@outlook.com/.bundle/${bundle.name}/${bundle.target}
+
     variables:
-      catalog: commerce_raw_dev
-      schema: bronze
+      raw_catalog: commerce_raw_prod
+      raw_schema: bronze
+
+      stage_catalog: commerce_stage_prod
+      stage_schema: silver
+
       env: prod
+
     permissions:
       - user_name: meghanath777@outlook.com
         level: CAN_MANAGE
