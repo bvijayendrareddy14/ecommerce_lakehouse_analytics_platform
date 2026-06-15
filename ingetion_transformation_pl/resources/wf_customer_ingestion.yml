@@ -1,21 +1,24 @@
 resources:
   jobs:
     customers_ingestion_pipeline:
-      name: "[dev meghanath777] wf_customer_ingestion"
+
+      name: "wf_customer_ingestion"
 
       max_concurrent_runs: 1
 
       tasks:
+
         - task_key: customers_raw_ingest
           environment_key: default
 
           notebook_task:
             notebook_path: ../src/customers_raw.ipynb
             source: WORKSPACE
+
             base_parameters:
-              catalog: commerce_raw_dev
-              schema: bronze
-              env: dev
+              catalog: ${var.raw_catalog}
+              schema: ${var.raw_schema}
+              env: ${var.env}
 
         - task_key: customers_stage_ingest
           environment_key: default
@@ -26,10 +29,11 @@ resources:
           notebook_task:
             notebook_path: ../src/customers_stage.ipynb
             source: WORKSPACE
+
             base_parameters:
-              catalog: commerce_stage_dev
-              schema: silver
-              env: dev
+              catalog: ${var.stage_catalog}
+              schema: ${var.stage_schema}
+              env: ${var.env}
 
       queue:
         enabled: true
@@ -44,4 +48,4 @@ resources:
       tags:
         project: ecommerce_lakehouse
         entity: customers
-        env: dev
+        env: ${var.env}
