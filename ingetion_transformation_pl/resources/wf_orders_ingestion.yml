@@ -1,0 +1,47 @@
+resources:
+  jobs:
+    orders_ingestion_pipeline:
+      name: "[dev meghanath777] wf_orders_ingestion"
+
+      max_concurrent_runs: 1
+
+      tasks:
+        - task_key: orders_raw_ingest
+          environment_key: default
+
+          notebook_task:
+            notebook_path: ../src/order_raw.ipynb
+            source: WORKSPACE
+            base_parameters:
+              catalog: commerce_raw_dev
+              schema: bronze
+              env: dev
+
+        - task_key: orders_stage_ingest
+          environment_key: default
+
+          depends_on:
+            - task_key: orders_raw_ingest
+
+          notebook_task:
+            notebook_path: ../src/orders_stage.ipynb
+            source: WORKSPACE
+            base_parameters:
+              catalog: commerce_stage_dev
+              schema: silver
+              env: dev
+
+      queue:
+        enabled: true
+
+      environments:
+        - environment_key: default
+          spec:
+            environment_version: "4"
+
+      performance_target: PERFORMANCE_OPTIMIZED
+
+      tags:
+        project: ecommerce_lakehouse
+        entity: orders
+        env: dev
