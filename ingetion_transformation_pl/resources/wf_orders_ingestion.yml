@@ -29,7 +29,7 @@ resources:
             base_parameters:
               catalog: ${var.stage_catalog}
               schema: ${var.stage_schema}
-              env: dev${var.env}
+              env: ${var.env}
       queue:
         enabled: true
 
