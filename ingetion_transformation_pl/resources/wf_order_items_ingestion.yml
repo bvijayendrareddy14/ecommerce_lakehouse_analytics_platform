@@ -1,7 +1,7 @@
 resources:
   jobs:
     order_items_ingestion_pipeline:
-      name: "[dev meghanath777] wf_order_items_ingestion"
+      name: "wf_order_items_ingestion"
 
       max_concurrent_runs: 1
 
@@ -13,9 +13,9 @@ resources:
             notebook_path: ../src/order_items_raw.ipynb
             source: WORKSPACE
             base_parameters:
-              catalog: commerce_raw_dev
-              schema: bronze
-              env: dev
+              catalog: ${var.raw_catalog}
+              schema: ${var.raw_schema}
+              env: ${var.env}
 
         - task_key: order_items_stage_ingest
           environment_key: default
@@ -27,9 +27,9 @@ resources:
             notebook_path: ../src/order_items_stage.ipynb
             source: WORKSPACE
             base_parameters:
-              catalog: commerce_stage_dev
-              schema: silver
-              env: dev
+              catalog: ${var.stage_catalog}
+              schema: ${var.stage_schema}
+              env: dev${var.env}
 
       queue:
         enabled: true
@@ -44,4 +44,4 @@ resources:
       tags:
         project: ecommerce_lakehouse
         entity: order_items
-        env: dev
+        env: ${var.env}
