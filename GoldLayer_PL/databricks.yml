@@ -1,0 +1,45 @@
+bundle:
+  name: GoldLayer_PL
+  uuid: 87abd41f-d27c-4a22-93c6-acb1f20c3929
+
+include:
+  - resources/*.yml
+
+variables:
+  catalog:
+    description: The catalog to use
+
+  schema:
+    description: The schema to use
+
+  env:
+    description: Environment
+
+targets:
+  dev:
+    mode: development
+    default: true
+
+    workspace:
+      host: https://adb-7405618330413294.14.azuredatabricks.net
+
+    variables:
+      catalog: commerce_main_dev
+      schema: gold
+      env: dev
+
+  prod:
+    mode: production
+
+    workspace:
+      host: https://adb-7405618330413294.14.azuredatabricks.net
+      root_path: /Workspace/Users/meghanath777@outlook.com/.bundle/${bundle.name}/${bundle.target}
+
+    variables:
+      catalog: commerce_main_prod
+      schema: gold
+      env: prod
+
+    permissions:
+      - user_name: meghanath777@outlook.com
+        level: CAN_MANAGE
