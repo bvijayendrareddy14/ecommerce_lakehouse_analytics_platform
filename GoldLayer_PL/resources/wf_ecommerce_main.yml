@@ -1,0 +1,92 @@
+resources:
+  jobs:
+    gold_layer_pipeline:
+      name: "wf_ecommerce_main"
+
+      max_concurrent_runs: 1
+
+      tasks:
+
+        - task_key: dim_customer_load
+          environment_key: default
+
+          notebook_task:
+            notebook_path: ../src/load_dim_customer.ipynb
+            source: WORKSPACE
+
+            base_parameters:
+              catalog: ${var.catalog}
+              schema: gold
+              env: ${var.env}
+
+        - task_key: dim_product_load
+          environment_key: default
+
+          notebook_task:
+            notebook_path: ../src/load_dim_product.ipynb
+            source: WORKSPACE
+
+            base_parameters:
+              catalog: ${var.catalog}
+              schema: gold
+              env: ${var.env}
+
+        - task_key: dim_date_load
+          environment_key: default
+
+          notebook_task:
+            notebook_path: ../src/load_dim_date.ipynb
+            source: WORKSPACE
+
+            base_parameters:
+              catalog: ${var.catalog}
+              schema: gold
+              env: ${var.env}
+
+        - task_key: fact_sales_load
+          environment_key: default
+
+          depends_on:
+            - task_key: dim_customer_load
+            - task_key: dim_product_load
+            - task_key: dim_date_load
+
+          notebook_task:
+            notebook_path: ../src/load_fact_sales.ipynb
+            source: WORKSPACE
+
+            base_parameters:
+              catalog: ${var.catalog}
+              schema: gold
+              env: ${var.env}
+
+        - task_key: fact_returns_load
+          environment_key: default
+
+          depends_on:
+            - task_key: dim_product_load
+            - task_key: dim_date_load
+
+          notebook_task:
+            notebook_path: ../src/load_fact_returns.ipynb
+            source: WORKSPACE
+
+            base_parameters:
+              catalog: ${var.catalog}
+              schema: gold
+              env: ${var.env}
+
+      queue:
+        enabled: true
+
+      environments:
+        - environment_key: default
+          spec:
+            environment_version: "4"
+
+      performance_target: PERFORMANCE_OPTIMIZED
+
+      tags:
+        project: ecommerce_lakehouse
+        layer: gold
+        env: ${var.env}
